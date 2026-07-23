@@ -1,0 +1,68 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { navLinks } from "../data/nav";
+import { href } from "../lib/url";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="That page couldn't be found. Head back to Blueberry Hill Farm."
+  path="/404"
+  noindex={true}
+>
+  <section class="notfound section">
+    <div class="container center">
+      <p class="notfound__code">404</p>
+      <h1>This row's a little bare.</h1>
+      <p class="lead measure center">
+        We couldn't find that page — it may have moved, or the link might have a
+        typo. Let's get you back to the good berries.
+      </p>
+      <div class="flow-cta" style="justify-content:center">
+        <a class="btn btn--primary" href={href("/")}>
+          <Icon name="arrow-right" size={17} /> Back to home
+        </a>
+        <a class="btn btn--ghost" href={href("/info")}>Plan a visit</a>
+      </div>
+
+      <nav class="notfound__links" aria-label="Site pages">
+        {navLinks.map((l) => <a href={href(l.path)}>{l.label}</a>)}
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: grid;
+    place-items: center;
+    min-height: 60vh;
+    padding-block: clamp(3rem, 8vw, 6rem);
+  }
+  .notfound__code {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 12vw, 8rem);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--c-bloom);
+    margin: 0 0 0.5rem;
+  }
+  .notfound__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.25rem;
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--c-line);
+  }
+  .notfound__links a {
+    font-weight: 600;
+    color: var(--c-ink-soft);
+    text-decoration: none;
+  }
+  .notfound__links a:hover {
+    color: var(--c-berry-dark);
+  }
+</style>

@@ -1,0 +1,102 @@
+---
+/**
+ * All <head> metadata: title, description, canonical, Open Graph, Twitter card,
+ * favicons, JSON-LD LocalBusiness data, and optional Plausible analytics.
+ */
+import { farm, fullAddress } from "../data/farm";
+import { absoluteUrl } from "../lib/url";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Root-relative path of this page, e.g. "/info". */
+  path?: string;
+  /** Root-relative path to a social share image (defaults to brand image). */
+  image?: string;
+  /** Set true to keep a page out of search results. */
+  noindex?: boolean;
+}
+const {
+  title,
+  description,
+  path = "/",
+  image = "/og-image.png",
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site;
+const canonical = absoluteUrl(path, site);
+const ogImage = absoluteUrl(image, site);
+const fullTitle =
+  path === "/" ? `${farm.name} — ${farm.tagline}` : `${title} · ${farm.name}`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Farm",
+  name: farm.name,
+  description: farm.shortDescription,
+  telephone: farm.phone,
+  email: farm.email,
+  url: canonical,
+  image: ogImage,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: farm.address.street,
+    addressLocality: farm.address.town,
+    addressRegion: farm.address.state,
+    postalCode: farm.address.zip,
+    addressCountry: "US",
+  },
+  sameAs: [farm.social.instagram.url, farm.social.facebook.url],
+  areaServed: "The Berkshires, Massachusetts",
+  knowsAbout: "Pick-your-own blueberries",
+};
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Icons & theme -->
+<link rel="icon" href={absoluteUrl("/favicon.svg", site)} type="image/svg+xml" />
+<link rel="icon" href={absoluteUrl("/favicon.ico", site)} sizes="32x32" />
+<link rel="apple-touch-icon" href={absoluteUrl("/apple-touch-icon.png", site)} />
+<meta name="theme-color" content="#1e1d45" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={farm.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<meta name="geo.region" content="US-MA" />
+<meta name="geo.placename" content={`${farm.address.town}, ${farm.address.stateLong}`} />
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+{
+  farm.analytics.plausibleDomain && (
+    <script
+      is:inline
+      defer
+      data-domain={farm.analytics.plausibleDomain}
+      src="https://plausible.io/js/script.js"
+    />
+  )
+}

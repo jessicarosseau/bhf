@@ -1,0 +1,202 @@
+---
+/**
+ * FARM STATUS — the "are you open?" answer, reused across the site.
+ * Reads `farmStatus` and `farm.hours` from src/data/farm.ts. Farm owners only
+ * ever edit the data file; every instance of this component updates at once.
+ *
+ * variant="card"   full panel for the homepage & Info page
+ * variant="compact" slim strip for other pages
+ */
+import { farm, farmStatus } from "../data/farm";
+import Icon from "./Icon.astro";
+
+interface Props {
+  variant?: "card" | "compact";
+  class?: string;
+}
+const { variant = "card", class: className = "" } = Astro.props;
+
+const meta = {
+  open: { label: "Open", tone: "open", dot: "Open now" },
+  closed: { label: "Closed", tone: "closed", dot: "Closed" },
+  "opening-soon": { label: "Opening soon", tone: "soon", dot: "Opening soon" },
+  "closing-soon": { label: "Season ending", tone: "soon", dot: "Ending soon" },
+}[farmStatus.status];
+---
+
+<section
+  class={`status status--${meta.tone} status--${variant} ${className}`}
+  aria-labelledby="farm-status-title"
+>
+  <div class="status__head">
+    <span class="status__badge">
+      <span class="status__pulse" aria-hidden="true"></span>
+      {meta.label}
+    </span>
+    <span class="status__updated">Updated {farmStatus.updated}</span>
+  </div>
+
+  <h2 id="farm-status-title" class="status__headline">{farmStatus.headline}</h2>
+  {variant === "card" && <p class="status__detail">{farmStatus.detail}</p>}
+
+  <dl class="status__hours">
+    <div>
+      <dt><Icon name="clock" size={17} /> Typical hours</dt>
+      <dd>{farm.hours.summary}</dd>
+    </div>
+    <div>
+      <dt><Icon name="map-pin" size={17} /> Where</dt>
+      <dd>{farm.address.town}, {farm.address.state}</dd>
+    </div>
+  </dl>
+
+  <p class="status__note">
+    <Icon name="info" size={17} />
+    <span>{farm.hours.importantNote}</span>
+  </p>
+
+  <div class="status__cta">
+    <a class="btn btn--sm btn--primary" href={farm.social.instagram.url} target="_blank" rel="noopener">
+      <Icon name="instagram" size={18} /> Instagram
+    </a>
+    <a class="btn btn--sm btn--ghost" href={farm.social.facebook.url} target="_blank" rel="noopener">
+      <Icon name="facebook" size={18} /> Facebook
+    </a>
+  </div>
+</section>
+
+<style>
+  .status {
+    --tone: var(--c-berry);
+    --tone-soft: var(--c-berry-soft);
+    background: var(--c-paper);
+    border: 1px solid var(--c-line);
+    border-top: 5px solid var(--tone);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: clamp(1.25rem, 3vw, 1.9rem);
+  }
+  .status--open {
+    --tone: var(--c-open);
+    --tone-soft: var(--c-open-soft);
+  }
+  .status--closed {
+    --tone: var(--c-closed);
+    --tone-soft: var(--c-closed-soft);
+  }
+  .status--soon {
+    --tone: var(--c-soon);
+    --tone-soft: var(--c-soon-soft);
+  }
+
+  .status__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+  }
+  .status__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    color: var(--tone);
+    background: var(--tone-soft);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+  }
+  .status__pulse {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--tone);
+    box-shadow: 0 0 0 0 var(--tone);
+    animation: statusPulse 2.4s ease-out infinite;
+  }
+  @keyframes statusPulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--tone) 55%, transparent);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 7px transparent;
+    }
+  }
+  .status__updated {
+    font-size: 0.8rem;
+    color: var(--c-muted);
+  }
+  .status__headline {
+    font-size: clamp(1.3rem, 1.1rem + 1vw, 1.8rem);
+    margin: 0 0 0.5rem;
+    color: var(--c-berry-deep);
+  }
+  .status__detail {
+    color: var(--c-ink-soft);
+    margin-bottom: 1.1rem;
+  }
+  .status__hours {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    margin: 0 0 1rem;
+    padding: 0.9rem 0;
+    border-block: 1px solid var(--c-line);
+  }
+  .status__hours div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .status__hours dt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-muted);
+  }
+  .status__hours dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+  .status__note {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.9rem;
+    color: var(--c-ink-soft);
+    background: var(--c-cream);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 0.85rem;
+    margin: 0 0 1.1rem;
+  }
+  .status__note :global(svg) {
+    flex-shrink: 0;
+    color: var(--tone);
+    margin-top: 0.1rem;
+  }
+  .status__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  /* Compact variant */
+  .status--compact {
+    padding: 1rem 1.15rem;
+  }
+  .status--compact .status__headline {
+    font-size: 1.15rem;
+    margin-bottom: 0.75rem;
+  }
+  .status--compact .status__hours {
+    margin-bottom: 0.85rem;
+  }
+</style>

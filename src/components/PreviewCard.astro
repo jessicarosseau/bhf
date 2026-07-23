@@ -1,0 +1,94 @@
+---
+/**
+ * Preview card linking to a major section (About, Cookbook, Gallery, Around Us).
+ * Uses a Placeholder art panel until a real photo is supplied.
+ */
+import { href } from "../lib/url";
+import Placeholder from "./Placeholder.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  cta: string;
+  tone?: "berry" | "leaf" | "sky" | "sun";
+  icon?: "camera" | "leaf" | "sun" | "basket" | "map-pin";
+  label?: string;
+}
+const {
+  title,
+  description,
+  path,
+  cta,
+  tone = "berry",
+  icon = "camera",
+  label = "Photo coming soon",
+} = Astro.props;
+---
+
+<a class="preview card" href={href(path)}>
+  <div class="preview__media">
+    <Placeholder ratio="16 / 10" tone={tone} icon={icon} label={label} />
+  </div>
+  <div class="preview__body">
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <span class="preview__cta">{cta} <Icon name="arrow-right" size={17} /></span>
+  </div>
+</a>
+
+<style>
+  .preview {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .preview:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--c-bloom);
+  }
+  .preview__media {
+    overflow: hidden;
+  }
+  .preview__media :global(.ph) {
+    transition: transform 0.4s ease;
+  }
+  .preview:hover .preview__media :global(.ph) {
+    transform: scale(1.04);
+  }
+  .preview__body {
+    padding: 1.35rem 1.4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+  .preview__body h3 {
+    margin: 0;
+    color: var(--c-berry-deep);
+  }
+  .preview__body p {
+    color: var(--c-ink-soft);
+    font-size: 0.95rem;
+    flex: 1;
+  }
+  .preview__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    color: var(--c-berry-dark);
+    margin-top: 0.25rem;
+  }
+  .preview__cta :global(svg) {
+    transition: transform 0.2s ease;
+  }
+  .preview:hover .preview__cta :global(svg) {
+    transform: translateX(4px);
+  }
+</style>

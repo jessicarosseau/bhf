@@ -1,0 +1,196 @@
+---
+import { farm, fullAddress, mapDirectionsUrl } from "../data/farm";
+import { navLinks } from "../data/nav";
+import { href } from "../lib/url";
+import BerryMark from "./BerryMark.astro";
+import Icon from "./Icon.astro";
+
+const year = 2026; // update yearly, or automate in your build if preferred
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a class="brand" href={href("/")} aria-label={`${farm.name} — home`}>
+        <BerryMark size={40} />
+        <span class="brand__word">
+          <span class="brand__name">Blueberry Hill Farm</span>
+          <span class="brand__sub">Mt. Washington · The Berkshires</span>
+        </span>
+      </a>
+      <p class="site-footer__blurb">{farm.tagline}</p>
+      <div class="site-footer__social">
+        <a href={farm.social.instagram.url} target="_blank" rel="noopener" aria-label="Blueberry Hill Farm on Instagram">
+          <Icon name="instagram" size={20} />
+        </a>
+        <a href={farm.social.facebook.url} target="_blank" rel="noopener" aria-label="Blueberry Hill Farm on Facebook">
+          <Icon name="facebook" size={20} />
+        </a>
+      </div>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="Footer">
+      <h2>Explore</h2>
+      <ul>
+        {navLinks.map((l) => <li><a href={href(l.path)}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="site-footer__contact">
+      <h2>Visit &amp; Contact</h2>
+      <ul>
+        <li>
+          <Icon name="map-pin" size={17} />
+          <a href={mapDirectionsUrl} target="_blank" rel="noopener">{fullAddress}</a>
+        </li>
+        <li>
+          <Icon name="phone" size={17} />
+          <a href={`tel:${farm.phoneHref}`}>{farm.phone}</a>
+        </li>
+        <li>
+          <Icon name="mail" size={17} />
+          <a href={`mailto:${farm.email}`}>{farm.email}</a>
+        </li>
+        <li>
+          <Icon name="clock" size={17} />
+          <span>{farm.hours.summary}</span>
+        </li>
+      </ul>
+      <p class="site-footer__reminder">
+        Hours &amp; picking conditions change often — check Instagram or Facebook before you come.
+      </p>
+    </div>
+  </div>
+
+  <div class="site-footer__bar">
+    <div class="container site-footer__bar-inner">
+      <p>© {year} {farm.legalEntity}. All rights reserved.</p>
+      <p class="site-footer__made">
+        Made with care in {farm.address.town}, {farm.address.stateLong}.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--c-berry-deep);
+    color: #c9c5e0;
+    margin-top: auto;
+  }
+  .site-footer a {
+    color: #d9d5ee;
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1.5fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(3rem, 6vw, 4.5rem);
+  }
+  @media (max-width: 52rem) {
+    .site-footer__grid {
+      grid-template-columns: 1fr;
+      gap: 2.25rem;
+    }
+  }
+
+  .site-footer .brand {
+    color: #fff;
+  }
+  .site-footer .brand__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+  .site-footer .brand__sub {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--c-bloom);
+  }
+  .site-footer .brand__word {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+  .site-footer__blurb {
+    margin: 1rem 0 1.25rem;
+    max-width: 30ch;
+    color: #b3aed0;
+  }
+  .site-footer__social {
+    display: flex;
+    gap: 0.6rem;
+  }
+  .site-footer__social a {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+  }
+  .site-footer__social a:hover {
+    background: var(--c-berry);
+    transform: translateY(-2px);
+  }
+
+  .site-footer h2 {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-bloom);
+    margin: 0 0 1rem;
+  }
+  .site-footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .site-footer__nav li {
+    margin-bottom: 0.55rem;
+  }
+  .site-footer__contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+  }
+  .site-footer__contact :global(svg) {
+    color: var(--c-bloom);
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+  .site-footer__reminder {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #9a95bd;
+    max-width: 34ch;
+  }
+
+  .site-footer__bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .site-footer__bar-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-block: 1.4rem;
+    font-size: 0.82rem;
+    color: #928db4;
+  }
+  .site-footer__bar-inner p {
+    margin: 0;
+  }
+</style>

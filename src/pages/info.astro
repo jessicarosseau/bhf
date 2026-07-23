@@ -1,0 +1,566 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import FarmStatus from "../components/FarmStatus.astro";
+import Icon from "../components/Icon.astro";
+import {
+  farm,
+  fullAddress,
+  mapDirectionsUrl,
+  mapEmbedUrl,
+} from "../data/farm";
+import { href } from "../lib/url";
+
+const jumpLinks = [
+  { id: "status", label: "Today" },
+  { id: "location", label: "Location" },
+  { id: "hours", label: "Hours" },
+  { id: "picking", label: "Picking" },
+  { id: "bring", label: "What to bring" },
+  { id: "policies", label: "Policies" },
+  { id: "faq", label: "FAQ" },
+];
+
+const bring = [
+  { icon: "sun", text: "Sun protection — hats, sunscreen, sunglasses. The rows are open and exposed." },
+  { icon: "basket", text: "Comfortable closed-toe shoes for uneven, sometimes damp ground." },
+  { icon: "info", text: "Water, especially on warm days — it's a bit of a climb up here." },
+  { icon: "camera", text: "A camera or phone — the views are worth it." },
+];
+
+const policies = [
+  { icon: "clock", title: "Hours & access", body: "Please do not come outside of posted hours. For everyone's safety, no one is allowed on the farm when we're closed.", verified: true },
+  { icon: "basket", title: "Containers", body: "Check in when you arrive to get food-grade take-home buckets. Fill them in the rows, then take your berries home — no need to return the buckets.", verified: true },
+  { icon: "paw", title: "Dogs & pets", body: "⚑ Pet policy to be confirmed by the farm. Please check Instagram or Facebook, or call ahead, before bringing a dog.", verified: false },
+  { icon: "accessibility", title: "Children", body: "Little ones are welcome and love the rows — please keep an eye on them and help us pick gently so the bushes keep producing.", verified: false },
+  { icon: "camera", title: "Photography", body: "Personal photos are welcome. ⚑ For professional or commercial shoots, please contact the farm first.", verified: false },
+];
+
+const faqs = [
+  { q: "Are you open today?", a: "Our season is short and weather-dependent, so the surest answer is always on our Instagram and Facebook — we post opening days and any closures there each morning. Typical season hours are Friday–Monday, 10 a.m.–5 p.m." },
+  { q: "Do I need a reservation?", a: "No reservation needed — just come during posted hours while we're open for the season and check in when you arrive." },
+  { q: "How does pricing work?", a: "You pre-pay for your berries: a flat fee based on the size of the container you fill. ⚑ This season's price will be posted at check-in and can be listed here once confirmed." },
+  { q: "What kinds of blueberries do you grow?", a: farm.varieties },
+  { q: "When is the best time to pick?", a: "Because we're high on the mountain, our berries usually ripen 7–10 days later than farms in the valley — often mid-to-late summer. Follow along on social media and we'll let you know when picking is at its best." },
+  { q: "Can I buy already-picked berries?", a: "⚑ To be confirmed by the farm. Please ask on social media or call ahead." },
+  { q: "Is there a restroom on-site?", a: "⚑ Facilities information to be confirmed by the farm." },
+];
+---
+
+<BaseLayout
+  title="Plan Your Visit"
+  description={`Everything you need to visit ${farm.name}: address, directions, seasonal hours, parking, accessibility, payment, pick-your-own tips, policies, and FAQ. Always check Instagram & Facebook for today's hours.`}
+  path="/info"
+>
+  <PageHeader
+    eyebrow="Plan your visit"
+    title="Everything you need for a great visit"
+    intro="Read this on the drive up. Then check our Instagram or Facebook for today's hours and picking conditions — those change with the weather."
+  >
+    <div class="flow-cta page-header-cta">
+      <a class="btn btn--sm btn--sun" href={mapDirectionsUrl} target="_blank" rel="noopener">
+        <Icon name="map-pin" size={17} /> Get Directions
+      </a>
+      <a class="btn btn--sm btn--ghost" href={farm.social.instagram.url} target="_blank" rel="noopener">
+        <Icon name="instagram" size={17} /> Today's updates
+      </a>
+    </div>
+  </PageHeader>
+
+  <!-- Jump nav -->
+  <nav class="jumpnav" aria-label="On this page">
+    <div class="container jumpnav__inner">
+      {jumpLinks.map((l) => <a href={`#${l.id}`}>{l.label}</a>)}
+    </div>
+  </nav>
+
+  <div class="section">
+    <div class="container info-layout">
+      <!-- Today's status -->
+      <section id="status" class="info-block info-block--full">
+        <FarmStatus variant="card" />
+      </section>
+
+      <!-- Location -->
+      <section id="location" class="info-block">
+        <h2><Icon name="map-pin" size={22} /> Location &amp; directions</h2>
+        <address class="info-address">{fullAddress}</address>
+        <p>{farm.directionsNote}</p>
+        <p class="muted-note">
+          The farm is on East Street in Mt. Washington — the roads narrow and
+          climb as you go, so take it slow and follow signs near the farm.
+        </p>
+        <div class="flow-cta">
+          <a class="btn btn--sm btn--primary" href={mapDirectionsUrl} target="_blank" rel="noopener">
+            <Icon name="map-pin" size={17} /> Open in Maps
+          </a>
+        </div>
+        <div class="info-map card">
+          <iframe
+            title={`Map showing ${farm.name}`}
+            src={mapEmbedUrl}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact" class="info-block">
+        <h2><Icon name="phone" size={22} /> Contact</h2>
+        <ul class="info-list">
+          <li>
+            <Icon name="phone" size={18} />
+            <div><span class="info-list__label">Phone</span>
+              <a href={`tel:${farm.phoneHref}`}>{farm.phone}</a></div>
+          </li>
+          <li>
+            <Icon name="mail" size={18} />
+            <div><span class="info-list__label">Email</span>
+              <a href={`mailto:${farm.email}`}>{farm.email}</a></div>
+          </li>
+          <li>
+            <Icon name="instagram" size={18} />
+            <div><span class="info-list__label">Instagram</span>
+              <a href={farm.social.instagram.url} target="_blank" rel="noopener">{farm.social.instagram.handle}</a></div>
+          </li>
+          <li>
+            <Icon name="facebook" size={18} />
+            <div><span class="info-list__label">Facebook</span>
+              <a href={farm.social.facebook.url} target="_blank" rel="noopener">{farm.social.facebook.handle}</a></div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Hours & season -->
+      <section id="hours" class="info-block">
+        <h2><Icon name="clock" size={22} /> Season &amp; hours</h2>
+        <p><strong>Season:</strong> {farm.season.label}. {farm.season.note}</p>
+        <table class="hours-table">
+          <caption class="sr-only">Typical weekly hours</caption>
+          <tbody>
+            {
+              farm.hours.days.map((d) => (
+                <tr class={d.hours === "Closed" ? "is-closed" : ""}>
+                  <th scope="row">{d.day}</th>
+                  <td>{d.hours}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <p class="callout callout--warn">
+          <Icon name="info" size={18} />
+          <span>{farm.hours.importantNote}</span>
+        </p>
+      </section>
+
+      <!-- Parking & accessibility -->
+      <section id="access" class="info-block">
+        <h2><Icon name="car" size={22} /> Parking &amp; accessibility</h2>
+        <ul class="checklist">
+          <li><Icon name="check" size={17} /> Free parking on-site.</li>
+          <li><Icon name="check" size={17} /> ⚑ Accessibility details to be confirmed: the farm sits on a working hillside with natural, uneven, sometimes sloped ground between the rows.</li>
+          <li><Icon name="check" size={17} /> If you have specific access needs, please reach out on social media or call ahead — we're glad to help however we can.</li>
+        </ul>
+      </section>
+
+      <!-- Payment -->
+      <section id="payment" class="info-block">
+        <h2><Icon name="basket" size={22} /> Payment</h2>
+        <p>{farm.payment.pricingNote}</p>
+        <p class="muted-note">{farm.payment.price}</p>
+        <p><strong>We accept:</strong></p>
+        <ul class="chips">
+          {farm.payment.methods.map((m) => <li class="chip">{m}</li>)}
+        </ul>
+      </section>
+
+      <!-- How picking works -->
+      <section id="picking" class="info-block info-block--full">
+        <h2><Icon name="basket" size={22} /> How pick-your-own works</h2>
+        <ol class="steps">
+          <li><span class="steps__n">1</span><div><strong>Check in.</strong> Stop by when you arrive to pre-pay and pick up your food-grade take-home buckets.</div></li>
+          <li><span class="steps__n">2</span><div><strong>Head to the rows.</strong> We'll point you toward what's ripening best that day. Reach into the bush and roll the berries gently — the ripe ones come off easily.</div></li>
+          <li><span class="steps__n">3</span><div><strong>Take your time.</strong> Pick only the deep-blue berries, and try to leave the bushes tidy for the next family.</div></li>
+          <li><span class="steps__n">4</span><div><strong>Take them home.</strong> Your berries are yours to keep in the bucket — no need to return it. Enjoy them fresh or try a recipe from our <a href={href("/cookbook")}>cookbook</a>.</div></li>
+        </ol>
+      </section>
+
+      <!-- What to bring -->
+      <section id="bring" class="info-block">
+        <h2><Icon name="sun" size={22} /> What to bring</h2>
+        <ul class="checklist">
+          {bring.map((b) => <li><Icon name={b.icon} size={17} /> {b.text}</li>)}
+        </ul>
+      </section>
+
+      <!-- Weather -->
+      <section id="weather" class="info-block">
+        <h2><Icon name="info" size={22} /> Weather &amp; closures</h2>
+        <p>
+          We're a small farm at elevation, and weather can change our plans
+          quickly — rain, heat, or a picked-over field may mean we close early
+          or for the day.
+        </p>
+        <p class="callout callout--warn">
+          <Icon name="info" size={18} />
+          <span>Always check Instagram or Facebook the morning of your visit before making the drive.</span>
+        </p>
+      </section>
+
+      <!-- Policies -->
+      <section id="policies" class="info-block info-block--full">
+        <h2><Icon name="info" size={22} /> Farm policies</h2>
+        <div class="grid grid--3 policy-grid">
+          {
+            policies.map((p) => (
+              <div class="policy card">
+                <span class="policy__icon"><Icon name={p.icon} size={20} /></span>
+                <h3>{p.title}</h3>
+                <p>{p.body}</p>
+                {!p.verified && <span class="policy__flag">To be confirmed</span>}
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="info-block info-block--full">
+        <h2><Icon name="info" size={22} /> Frequently asked questions</h2>
+        <div class="faqs">
+          {
+            faqs.map((f) => (
+              <details class="faq">
+                <summary>{f.q}</summary>
+                <div class="faq__a"><p>{f.a}</p></div>
+              </details>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Bottom social CTA -->
+  <section class="section section--tight section--berry check-updates">
+    <div class="container center measure">
+      <p class="eyebrow" style="justify-content:center">One more thing</p>
+      <h2>Check today's farm updates</h2>
+      <p class="lead">Opening days, hours, and picking conditions are posted first on social media. Give us a follow before you head up.</p>
+      <div class="flow-cta" style="justify-content:center">
+        <a class="btn btn--sun" href={farm.social.instagram.url} target="_blank" rel="noopener"><Icon name="instagram" size={18} /> {farm.social.instagram.handle}</a>
+        <a class="btn btn--ghost" href={farm.social.facebook.url} target="_blank" rel="noopener"><Icon name="facebook" size={18} /> Facebook</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header-cta {
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+
+  /* Jump nav */
+  .jumpnav {
+    position: sticky;
+    top: 4.5rem;
+    z-index: 50;
+    background: color-mix(in srgb, var(--c-cream) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--c-line);
+  }
+  .jumpnav__inner {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-block: 0.6rem;
+    scrollbar-width: none;
+  }
+  .jumpnav__inner::-webkit-scrollbar {
+    display: none;
+  }
+  .jumpnav a {
+    flex-shrink: 0;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--c-ink-soft);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .jumpnav a:hover {
+    background: var(--c-berry-soft);
+    color: var(--c-berry-dark);
+  }
+
+  .info-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1.5rem, 4vw, 2.75rem);
+    align-items: start;
+  }
+  .info-block {
+    scroll-margin-top: 8rem;
+  }
+  .info-block--full {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 46rem) {
+    .info-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .info-block h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.5rem;
+  }
+  .info-block h2 :global(svg) {
+    color: var(--c-berry);
+    flex-shrink: 0;
+  }
+  .info-address {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--c-berry-deep);
+    margin-bottom: 0.5rem;
+  }
+  .muted-note {
+    color: var(--c-muted);
+    font-size: 0.92rem;
+  }
+
+  .info-map {
+    padding: 0.4rem;
+    margin-top: 1.1rem;
+  }
+  .info-map {
+    background: var(--c-berry-soft);
+  }
+  .info-map iframe {
+    width: 100%;
+    height: 15rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    display: block;
+    background: var(--c-berry-soft);
+  }
+
+  .info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .info-list li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    margin: 0;
+  }
+  .info-list :global(svg) {
+    color: var(--c-berry);
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+  .info-list__label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  .hours-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+  .hours-table th,
+  .hours-table td {
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .hours-table th {
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+  .hours-table td {
+    text-align: right;
+    font-weight: 600;
+    color: var(--c-berry-dark);
+  }
+  .hours-table .is-closed td {
+    color: var(--c-muted);
+    font-weight: 500;
+  }
+
+  .callout {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    margin: 1rem 0 0;
+  }
+  .callout :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .callout--warn {
+    background: var(--c-sun-soft);
+    color: #6b4a12;
+  }
+  .callout--warn :global(svg) {
+    color: var(--c-soon);
+  }
+
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .checklist li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    margin: 0;
+  }
+  .checklist :global(svg) {
+    color: var(--c-leaf);
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+  }
+
+  .chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0.5rem 0 0;
+  }
+  .chips li {
+    margin: 0;
+  }
+
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .steps li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin: 0;
+  }
+  .steps__n {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--c-berry);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .policy-grid {
+    margin-top: 0.5rem;
+  }
+  .policy {
+    padding: 1.35rem;
+    position: relative;
+  }
+  .policy__icon {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: var(--c-leaf-soft);
+    color: var(--c-leaf-dark);
+    margin-bottom: 0.75rem;
+  }
+  .policy h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
+  }
+  .policy p {
+    font-size: 0.92rem;
+    color: var(--c-ink-soft);
+  }
+  .policy__flag {
+    display: inline-block;
+    margin-top: 0.7rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--c-soon);
+    background: var(--c-sun-soft);
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill);
+  }
+
+  .faqs {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .faq {
+    background: var(--c-paper);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .faq summary {
+    padding: 1rem 1.15rem;
+    font-weight: 600;
+    color: var(--c-berry-deep);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary::after {
+    content: "+";
+    font-size: 1.4rem;
+    color: var(--c-berry);
+    transition: transform 0.2s ease;
+    line-height: 1;
+  }
+  .faq[open] summary::after {
+    transform: rotate(45deg);
+  }
+  .faq__a {
+    padding: 0 1.15rem 1.15rem;
+    color: var(--c-ink-soft);
+  }
+
+  .check-updates h2 {
+    color: #fff;
+  }
+</style>

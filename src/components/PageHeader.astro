@@ -1,0 +1,75 @@
+---
+/**
+ * Consistent page header (title banner) for interior pages.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  tone?: "berry" | "leaf";
+}
+const { eyebrow, title, intro, tone = "berry" } = Astro.props;
+---
+
+<section class={`page-header page-header--${tone}`}>
+  <div class="container container-narrow page-header__inner">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {intro && <p class="lead page-header__intro">{intro}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-header {
+    position: relative;
+    padding-block: clamp(2.75rem, 6vw, 4.5rem);
+    text-align: center;
+    overflow: hidden;
+  }
+  .page-header--berry {
+    background: linear-gradient(160deg, #26254f, #4b4e9e);
+    color: #fff;
+  }
+  .page-header--leaf {
+    background: linear-gradient(160deg, #2c4a34, #4b7a54);
+    color: #fff;
+  }
+  .page-header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle at 82% 0%,
+      rgba(251, 237, 210, 0.22),
+      transparent 45%
+    );
+    pointer-events: none;
+  }
+  .page-header__inner {
+    position: relative;
+  }
+  .page-header h1 {
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+  .eyebrow {
+    justify-content: center;
+    color: var(--c-bloom);
+  }
+  .page-header--leaf .eyebrow {
+    color: #cfe6c9;
+  }
+  .eyebrow::before {
+    background: var(--c-bloom);
+    box-shadow: 0 0 0 3px rgba(169, 182, 217, 0.25);
+  }
+  .page-header__intro {
+    color: #e4e1f2;
+    max-width: 52ch;
+    margin-inline: auto;
+  }
+  .page-header--leaf .page-header__intro {
+    color: #e7f1e4;
+  }
+</style>

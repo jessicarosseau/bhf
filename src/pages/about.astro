@@ -1,0 +1,325 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Placeholder from "../components/Placeholder.astro";
+import Icon from "../components/Icon.astro";
+import { farm } from "../data/farm";
+import { href } from "../lib/url";
+
+/**
+ * TIMELINE — verified milestones from the farm's own history, plus clearly
+ * marked placeholders (⚑) for family details still to be supplied.
+ * Add, edit, or reorder entries freely; the layout adapts.
+ */
+const milestones = [
+  { year: "1779", title: "A mountain town is born", body: "Mt. Washington is incorporated — to this day one of the smallest towns in Massachusetts, with only a few dozen year-round residents.", verified: true },
+  { year: "1941", title: "The first bushes go in", body: "Robert W. Austin plants blueberry bushes on the hillside. The mountain's acidic soil, it turns out, is suited to little else — but it grows wonderful blueberries.", verified: true },
+  { year: "1990s", title: "New varieties join the rows", body: "A handful of Bluecrop and Berkeley bushes are replanted alongside the original heirloom Rancocas, Jersey, and Rubel.", verified: true },
+  { year: "Today", title: "A family tradition continues", body: "⚑ Placeholder: share how the farm passed through the family and who tends it today. We'll set this in the family's own words.", verified: false },
+];
+
+const values = [
+  { icon: "leaf", title: "Grown with patience", body: "Old-fashioned highbush varieties, ripened slowly at elevation. Nothing rushed." },
+  { icon: "map-pin", title: "Rooted in this place", body: "The same hillside, the same soil, the same view over the Berkshires for generations." },
+  { icon: "basket", title: "A welcoming field", body: "A calm, unhurried place to spend a summer morning with the people you love." },
+];
+---
+
+<BaseLayout
+  title="About Us"
+  description={`The story of ${farm.name} — a family pick-your-own blueberry farm on Mt. Washington in the Berkshires, growing heirloom highbush blueberries since 1941.`}
+  path="/about"
+>
+  <PageHeader
+    eyebrow="Our story"
+    title="A family, a hillside, and a lot of blueberries"
+    intro="High on Mt. Washington in the southern Berkshires, we've been growing heirloom blueberries the slow way since 1941."
+    tone="leaf"
+  />
+
+  <!-- Intro split -->
+  <section class="section">
+    <div class="container about-intro">
+      <div class="about-intro__text">
+        <p class="eyebrow">Where we are</p>
+        <h2>The smallest town in Massachusetts</h2>
+        <p class="lead">
+          Mt. Washington sits in the far southwestern corner of the Berkshires,
+          tucked against the New York and Connecticut lines. It's a quiet place
+          of state forest, waterfalls, and long views — and it's where our
+          blueberries have grown for more than eighty years.
+        </p>
+        <p>
+          Our founder, Robert W. Austin, planted the first bushes in 1941. The
+          mountain's soil is highly acidic — not much wants to grow here — but
+          blueberries thrive. Because we're up so high, our berries ripen a week
+          or two behind the farms down in the valley, which makes for a lovely,
+          late Berkshire blueberry season.
+        </p>
+        <p class="source-note">
+          <Icon name="info" size={15} />
+          Historical details drawn from the farm's own records. ⚑ Family stories
+          and dates will be expanded with the owners.
+        </p>
+      </div>
+      <figure class="about-intro__media">
+        <Placeholder ratio="4 / 5" tone="berry" icon="leaf" label="Historical farm photo coming soon" />
+        <figcaption>⚑ A historical photo of the farm — caption to come.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-head center measure">
+        <p class="eyebrow" style="justify-content:center">Through the years</p>
+        <h2>A few milestones</h2>
+        <p class="lead">A living timeline — the family can add dates, names, and photographs here over time.</p>
+      </div>
+      <ol class="timeline">
+        {
+          milestones.map((m) => (
+            <li class="timeline__item">
+              <div class="timeline__marker" aria-hidden="true"></div>
+              <div class="timeline__year">{m.year}</div>
+              <div class="timeline__card card">
+                <h3>{m.title}</h3>
+                <p>{m.body}</p>
+                {!m.verified && <span class="timeline__flag">Placeholder</span>}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Historic photo gallery placeholders -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center measure">
+        <p class="eyebrow" style="justify-content:center">From the archives</p>
+        <h2>Photographs, as they arrive</h2>
+        <p class="lead">A flexible home for historical photos. Each one can carry its own caption and date.</p>
+      </div>
+      <div class="grid grid--3">
+        {
+          [
+            "The farm, 1944",
+            "The farm, 2004",
+            "August in the rows",
+          ].map((cap) => (
+            <figure class="archive card">
+              <Placeholder ratio="4 / 3" tone="sky" icon="camera" label="Historical photo coming soon" />
+              <figcaption>⚑ {cap} — caption to be confirmed.</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section section--leaf">
+    <div class="container">
+      <div class="section-head center measure">
+        <p class="eyebrow" style="justify-content:center">What we care about</p>
+        <h2>How we like to do things</h2>
+      </div>
+      <div class="grid grid--3">
+        {
+          values.map((v) => (
+            <div class="value">
+              <span class="value__icon"><Icon name={v.icon} size={24} /></span>
+              <h3>{v.title}</h3>
+              <p>{v.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section--tight section--berry">
+    <div class="container center measure">
+      <h2>Come see it for yourself</h2>
+      <p class="lead">The best way to know the farm is to spend a summer morning here.</p>
+      <div class="flow-cta" style="justify-content:center">
+        <a class="btn btn--sun" href={href("/info")}><Icon name="map-pin" size={18} /> Plan Your Visit</a>
+        <a class="btn btn--ghost" href={href("/gallery")}>See the gallery</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-intro {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .about-intro__media {
+    margin: 0;
+  }
+  .about-intro__media :global(.ph) {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+  .about-intro__media figcaption,
+  .archive figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--c-muted);
+  }
+  .source-note {
+    display: flex;
+    gap: 0.45rem;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: var(--c-muted);
+    background: var(--c-cream);
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--radius-sm);
+    margin-top: 1.25rem;
+  }
+  .source-note :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+  @media (max-width: 52rem) {
+    .about-intro {
+      grid-template-columns: 1fr;
+    }
+    .about-intro__media {
+      max-width: 22rem;
+      order: -1;
+    }
+  }
+
+  .section-head {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  /* Timeline */
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 46rem;
+    position: relative;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 7.5rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: var(--c-bloom);
+  }
+  .timeline__item {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 1.5rem;
+    position: relative;
+    margin: 0 0 1.5rem;
+    padding-left: 0;
+  }
+  .timeline__marker {
+    position: absolute;
+    left: 7.5rem;
+    top: 0.6rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    background: var(--c-berry);
+    border: 3px solid var(--c-cream);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  .timeline__year {
+    text-align: right;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--c-berry-dark);
+    padding-top: 0.35rem;
+  }
+  .timeline__card {
+    padding: 1.15rem 1.3rem;
+    position: relative;
+  }
+  .timeline__card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.35rem;
+  }
+  .timeline__card p {
+    color: var(--c-ink-soft);
+    font-size: 0.95rem;
+  }
+  .timeline__flag {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--c-soon);
+    background: var(--c-sun-soft);
+    padding: 0.18rem 0.5rem;
+    border-radius: var(--radius-pill);
+  }
+  @media (max-width: 40rem) {
+    .timeline::before {
+      left: 0.45rem;
+    }
+    .timeline__item {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      padding-left: 1.75rem;
+    }
+    .timeline__marker {
+      left: 0.45rem;
+    }
+    .timeline__year {
+      text-align: left;
+      padding-top: 0;
+    }
+  }
+
+  .archive {
+    margin: 0;
+    padding: 0.5rem;
+  }
+  .archive :global(.ph) {
+    border-radius: var(--radius-sm);
+  }
+  .archive figcaption {
+    padding: 0 0.35rem 0.25rem;
+  }
+
+  /* Values */
+  .value {
+    text-align: center;
+  }
+  .value__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    background: var(--c-paper);
+    color: var(--c-leaf-dark);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 0.85rem;
+  }
+  .value h3 {
+    margin-bottom: 0.3rem;
+  }
+  .value p {
+    color: var(--c-ink-soft);
+  }
+</style>

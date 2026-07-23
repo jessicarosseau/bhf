@@ -1,0 +1,293 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Placeholder from "../../components/Placeholder.astro";
+import Icon from "../../components/Icon.astro";
+import { recipeCategories, categoryOrder } from "../../data/recipeCategories";
+import { href } from "../../lib/url";
+
+const recipes = (await getCollection("recipes")).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const featured = recipes.filter((r) => r.data.featured);
+
+// Only show filters for categories that actually have recipes.
+const usedCategories = categoryOrder.filter((c) =>
+  recipes.some((r) => r.data.category === c)
+);
+---
+
+<BaseLayout
+  title="Cookbook"
+  description="A growing collection of blueberry recipes from Blueberry Hill Farm — muffins, pie, pancakes, jam, lemonade, and more. Print-friendly and easy to make with fresh-picked berries."
+  path="/cookbook"
+>
+  <PageHeader
+    eyebrow="The cookbook"
+    title="What to do with all those blueberries"
+    intro="A growing collection of our favorite ways to use fresh-picked berries — from breakfast to dessert to a jar of jam for later."
+  />
+
+  {
+    featured.length > 0 && (
+      <section class="section section--tight">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">Start here</p>
+            <h2>Featured recipes</h2>
+          </div>
+          <div class="grid grid--3 featured-grid">
+            {featured.map((r) => {
+              const cat = recipeCategories[r.data.category];
+              return (
+                <a class="rcard rcard--feature card" href={href(`/cookbook/${r.id}`)}>
+                  <div class="rcard__media">
+                    <Placeholder ratio="4 / 3" tone={cat.tone} icon="basket" label={`${r.data.title} — photo coming soon`} />
+                    <span class={`rcard__cat chip chip--${cat.tone}`}>{cat.label}</span>
+                  </div>
+                  <div class="rcard__body">
+                    <h3>{r.data.title}</h3>
+                    <p>{r.data.description}</p>
+                    <span class="rcard__meta">
+                      <Icon name="clock" size={15} /> {r.data.totalTime ?? r.data.prepTime} · {r.data.servings}
+                    </span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- All recipes with filter + search -->
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">The whole collection</p>
+        <h2>All recipes</h2>
+      </div>
+
+      <div class="recipe-controls">
+        <div class="filter-row" role="group" aria-label="Filter recipes by category">
+          <button class="filter is-active" data-filter="all">All</button>
+          {
+            usedCategories.map((c) => (
+              <button class="filter" data-filter={c}>{recipeCategories[c].label}</button>
+            ))
+          }
+        </div>
+        <div class="search">
+          <label for="recipe-search" class="sr-only">Search recipes</label>
+          <input
+            type="search"
+            id="recipe-search"
+            placeholder="Search recipes…"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <div class="grid grid--3 recipe-grid" id="recipe-grid">
+        {
+          recipes.map((r) => {
+            const cat = recipeCategories[r.data.category];
+            return (
+              <a
+                class="rcard card"
+                href={href(`/cookbook/${r.id}`)}
+                data-category={r.data.category}
+                data-title={r.data.title.toLowerCase()}
+                data-desc={r.data.description.toLowerCase()}
+              >
+                <div class="rcard__media">
+                  <Placeholder ratio="4 / 3" tone={cat.tone} icon="basket" label="Photo coming soon" />
+                  <span class={`rcard__cat chip chip--${cat.tone}`}>{cat.label}</span>
+                </div>
+                <div class="rcard__body">
+                  <h3>{r.data.title}</h3>
+                  <p>{r.data.description}</p>
+                  <span class="rcard__meta">
+                    <Icon name="clock" size={15} /> {r.data.totalTime ?? r.data.prepTime} · {r.data.difficulty}
+                  </span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+      <p class="no-results" id="no-results" hidden>
+        No recipes match that search yet. Try another word, or
+        <a href={href("/cookbook")}>see them all</a>.
+      </p>
+
+      <p class="cookbook-note">
+        <Icon name="info" size={16} />
+        These starter recipes show off the cookbook — the farm can edit, replace,
+        or add family favorites anytime. Recipe photos will be added as they're taken.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const grid = document.getElementById("recipe-grid");
+  const cards = Array.from(
+    grid?.querySelectorAll<HTMLElement>(".rcard") ?? []
+  );
+  const filters = Array.from(
+    document.querySelectorAll<HTMLButtonElement>(".filter")
+  );
+  const search = document.getElementById("recipe-search") as HTMLInputElement;
+  const noResults = document.getElementById("no-results");
+  let active = "all";
+
+  function apply() {
+    const q = (search?.value ?? "").trim().toLowerCase();
+    let shown = 0;
+    cards.forEach((card) => {
+      const matchCat = active === "all" || card.dataset.category === active;
+      const matchText =
+        !q ||
+        card.dataset.title?.includes(q) ||
+        card.dataset.desc?.includes(q);
+      const show = matchCat && matchText;
+      card.hidden = !show;
+      if (show) shown++;
+    });
+    if (noResults) noResults.hidden = shown !== 0;
+  }
+
+  filters.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filters.forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      active = btn.dataset.filter ?? "all";
+      apply();
+    });
+  });
+  search?.addEventListener("input", apply);
+</script>
+
+<style>
+  .section-head {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .recipe-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .filter {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--c-line);
+    background: var(--c-paper);
+    color: var(--c-ink-soft);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .filter:hover {
+    border-color: var(--c-berry);
+    color: var(--c-berry-dark);
+  }
+  .filter.is-active {
+    background: var(--c-berry);
+    border-color: var(--c-berry);
+    color: #fff;
+  }
+  .search input {
+    width: min(20rem, 100%);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--c-line);
+    background: var(--c-paper);
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--c-ink);
+  }
+  .search input:focus-visible {
+    border-color: var(--c-berry);
+    outline-offset: 0;
+  }
+
+  .rcard {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .rcard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--c-bloom);
+  }
+  .rcard__media {
+    position: relative;
+    overflow: hidden;
+  }
+  .rcard__cat {
+    position: absolute;
+    top: 0.7rem;
+    left: 0.7rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .rcard__body {
+    padding: 1.15rem 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+  }
+  .rcard__body h3 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  .rcard__body p {
+    color: var(--c-ink-soft);
+    font-size: 0.92rem;
+    flex: 1;
+  }
+  .rcard__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--c-muted);
+    margin-top: 0.3rem;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 2rem;
+    color: var(--c-ink-soft);
+  }
+  .cookbook-note {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    max-width: 52ch;
+    margin: 2rem auto 0;
+    font-size: 0.85rem;
+    color: var(--c-muted);
+  }
+  .cookbook-note :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+</style>

@@ -1,0 +1,19 @@
+{
+  "name": "blueberry-hill-farm",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Website for Blueberry Hill Farm — a family pick-your-own blueberry farm in the Berkshires.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "astro": "^5.5.0",
+    "sharp": "^0.33.5"
+  }
+}

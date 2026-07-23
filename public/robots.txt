@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Sitemap is generated automatically on build by @astrojs/sitemap.
+# Update the domain in astro.config.mjs / deploy env so this URL is correct.
+Sitemap: https://blueberryhillfarm.example.com/sitemap-index.xml

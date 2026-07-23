@@ -1,0 +1,350 @@
+---
+import { getCollection, render } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Placeholder from "../../components/Placeholder.astro";
+import Icon from "../../components/Icon.astro";
+import { recipeCategories } from "../../data/recipeCategories";
+import { href } from "../../lib/url";
+
+export const getStaticPaths = (async () => {
+  const recipes = await getCollection("recipes");
+  return recipes.map((recipe) => ({
+    params: { id: recipe.id },
+    props: { recipe },
+  }));
+}) satisfies GetStaticPaths;
+
+const { recipe } = Astro.props;
+const { data } = recipe;
+const cat = recipeCategories[data.category];
+const { Content } = await render(recipe);
+const hasIntro = (recipe.body ?? "").trim().length > 0;
+
+const meta = [
+  { icon: "clock", label: "Prep", value: data.prepTime },
+  data.cookTime && { icon: "sun", label: "Cook", value: data.cookTime },
+  data.totalTime && { icon: "clock", label: "Total", value: data.totalTime },
+  { icon: "basket", label: "Makes", value: data.servings },
+  { icon: "check", label: "Level", value: data.difficulty },
+].filter(Boolean) as { icon: any; label: string; value: string }[];
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  path={`/cookbook/${recipe.id}`}
+>
+  <article class="recipe">
+    <div class="recipe__hero section--berry">
+      <div class="container recipe__hero-inner">
+        <a class="recipe__back" href={href("/cookbook")}>
+          <Icon name="arrow-right" size={16} class="flip" /> All recipes
+        </a>
+        <span class={`chip chip--${cat.tone} recipe__cat`}>{cat.label}</span>
+        <h1>{data.title}</h1>
+        <p class="lead">{data.description}</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="container recipe__layout">
+        <div class="recipe__main">
+          <figure class="recipe__photo">
+            <Placeholder ratio="16 / 10" tone={cat.tone} icon="basket" label={`${data.title} — photo coming soon`} />
+          </figure>
+
+          {
+            hasIntro && (
+              <div class="recipe__intro">
+                <Content />
+              </div>
+            )
+          }
+
+          <section class="recipe__section" aria-labelledby="ingredients-h">
+            <h2 id="ingredients-h"><Icon name="basket" size={20} /> Ingredients</h2>
+            <ul class="ingredients">
+              {data.ingredients.map((i) => <li>{i}</li>)}
+            </ul>
+          </section>
+
+          <section class="recipe__section" aria-labelledby="instructions-h">
+            <h2 id="instructions-h"><Icon name="check" size={20} /> Instructions</h2>
+            <ol class="instructions">
+              {data.instructions.map((step) => <li>{step}</li>)}
+            </ol>
+          </section>
+
+          {
+            data.notes.length > 0 && (
+              <section class="recipe__section recipe__notes" aria-labelledby="notes-h">
+                <h2 id="notes-h"><Icon name="info" size={20} /> Notes &amp; substitutions</h2>
+                <ul>
+                  {data.notes.map((n) => <li>{n}</li>)}
+                </ul>
+              </section>
+            )
+          }
+        </div>
+
+        <aside class="recipe__aside">
+          <div class="recipe__facts card">
+            <h2 class="sr-only">Recipe details</h2>
+            <dl>
+              {
+                meta.map((m) => (
+                  <div>
+                    <dt><Icon name={m.icon} size={16} /> {m.label}</dt>
+                    <dd>{m.value}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+            <button class="btn btn--sm btn--ghost btn--block" id="print-btn" type="button">
+              <Icon name="print" size={17} /> Print recipe
+            </button>
+          </div>
+          <p class="recipe__tip">
+            Made with fresh-picked berries?
+            <a href={href("/info")}>Plan a visit</a> to pick more.
+          </p>
+        </aside>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  document
+    .getElementById("print-btn")
+    ?.addEventListener("click", () => window.print());
+</script>
+
+<style>
+  .recipe__hero {
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+  .recipe__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--c-bloom);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    margin-bottom: 1rem;
+  }
+  .recipe__back:hover {
+    color: #fff;
+  }
+  .recipe__back :global(.flip) {
+    transform: rotate(180deg);
+  }
+  .recipe__cat {
+    margin-bottom: 0.9rem;
+  }
+  .recipe__hero h1 {
+    color: #fff;
+    max-width: 20ch;
+  }
+  .recipe__hero .lead {
+    color: #dcd8ee;
+    max-width: 52ch;
+  }
+
+  .recipe__layout {
+    display: grid;
+    grid-template-columns: 1fr 18rem;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    align-items: start;
+  }
+  @media (max-width: 52rem) {
+    .recipe__layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .recipe__photo {
+    margin: 0 0 1.75rem;
+  }
+  .recipe__photo :global(.ph) {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+  .recipe__intro {
+    font-size: 1.1rem;
+    color: var(--c-ink-soft);
+    margin-bottom: 1.5rem;
+  }
+  .recipe__intro:empty {
+    display: none;
+  }
+
+  .recipe__section {
+    margin-bottom: 2.25rem;
+  }
+  .recipe__section h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 1.5rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--c-berry-soft);
+  }
+  .recipe__section h2 :global(svg) {
+    color: var(--c-berry);
+  }
+
+  .ingredients {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .ingredients li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin: 0;
+  }
+  .ingredients li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--c-bloom);
+  }
+
+  .instructions {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .instructions li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.9rem;
+    align-items: start;
+    margin: 0;
+  }
+  .instructions li::before {
+    content: counter(step);
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--c-berry);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .recipe__notes ul {
+    background: var(--c-sun-soft);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.1rem 1.1rem 2.4rem;
+    color: #5a3f10;
+  }
+  .recipe__notes li {
+    margin-bottom: 0.4rem;
+  }
+
+  /* Sidebar */
+  .recipe__facts {
+    padding: 1.35rem;
+    position: sticky;
+    top: 6rem;
+  }
+  .recipe__facts dl {
+    margin: 0 0 1.1rem;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .recipe__facts dl div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .recipe__facts dl div:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .recipe__facts dt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+  .recipe__facts dt :global(svg) {
+    color: var(--c-berry);
+  }
+  .recipe__facts dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--c-berry-deep);
+    text-align: right;
+  }
+  .recipe__tip {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: var(--c-muted);
+    text-align: center;
+  }
+
+  /* Print-friendly */
+  @media print {
+    :global(.site-header),
+    :global(.site-footer),
+    .recipe__hero .lead,
+    .recipe__back,
+    .recipe__photo,
+    #print-btn,
+    .recipe__tip {
+      display: none !important;
+    }
+    :global(body) {
+      background: #fff;
+    }
+    .recipe__hero {
+      background: none !important;
+      color: #000;
+      padding-block: 0 1rem;
+    }
+    .recipe__hero h1 {
+      color: #000;
+    }
+    .recipe__layout {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .recipe__facts {
+      position: static;
+      box-shadow: none;
+      border: 1px solid #ccc;
+    }
+    .instructions li::before {
+      background: #000;
+    }
+    .recipe__notes ul {
+      background: none;
+      border: 1px solid #ccc;
+    }
+  }
+</style>

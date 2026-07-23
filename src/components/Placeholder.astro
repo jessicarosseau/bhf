@@ -1,0 +1,107 @@
+---
+/**
+ * A polished, clearly-labeled stand-in for a photo the farm will supply later.
+ * Renders a soft blueberry-toned "poster" panel with an icon and caption so the
+ * layout looks finished while making it obvious a real image belongs here.
+ *
+ * Replace with a real <Image /> when photos arrive — see CONTENT-GUIDE.md.
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  label?: string;
+  ratio?: string; // e.g. "4 / 3", "16 / 9", "1 / 1"
+  tone?: "berry" | "leaf" | "sky" | "sun";
+  icon?: "camera" | "leaf" | "sun" | "basket" | "map-pin";
+  class?: string;
+}
+const {
+  label = "Photo coming soon",
+  ratio = "4 / 3",
+  tone = "berry",
+  icon = "camera",
+  class: className = "",
+} = Astro.props;
+
+const tones = {
+  berry: ["#e9e9f5", "#c3cbe6", "#4b4e9e"],
+  leaf: ["#e6efe4", "#bcd2b9", "#4b7a54"],
+  sky: ["#eaf0f6", "#c6d6e6", "#5d7796"],
+  sun: ["#fbedd2", "#f0d29a", "#c07d1f"],
+} as const;
+const [c1, c2, ink] = tones[tone];
+---
+
+<div
+  class={`ph ${className}`}
+  style={`--ratio:${ratio};--c1:${c1};--c2:${c2};--ink:${ink};`}
+>
+  <div class="ph__art" aria-hidden="true">
+    <span class="ph__badge"><Icon name={icon} size={22} /></span>
+  </div>
+  <span class="ph__label">{label}</span>
+</div>
+
+<style>
+  .ph {
+    position: relative;
+    aspect-ratio: var(--ratio);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+    overflow: hidden;
+    background: linear-gradient(150deg, var(--c1), var(--c2));
+    color: var(--ink);
+  }
+  /* soft "rolling hills" motif drawn with layered radial gradients */
+  .ph__art {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+        120% 80% at 20% 120%,
+        rgba(255, 255, 255, 0.55) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        110% 70% at 90% 130%,
+        rgba(255, 255, 255, 0.35) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        60% 60% at 78% 22%,
+        rgba(255, 255, 255, 0.5) 0%,
+        transparent 60%
+      );
+  }
+  .ph__badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--ink);
+    box-shadow: 0 2px 10px rgba(30, 29, 69, 0.12);
+  }
+  .ph__label {
+    position: absolute;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    right: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-align: center;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--ink);
+    backdrop-filter: blur(2px);
+  }
+</style>
