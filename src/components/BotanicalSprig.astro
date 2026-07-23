@@ -1,0 +1,38 @@
+---
+/**
+ * A fine monoline blueberry sprig — the site's botanical signature.
+ * Decorative; inherits currentColor so it can sit on any surface.
+ */
+interface Props {
+  size?: number | string;
+  class?: string;
+  stroke?: number;
+}
+const { size = 64, class: className = "", stroke = 1.25 } = Astro.props;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 80 96"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={stroke}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <!-- stem -->
+  <path d="M40 8c0 22-2 38-2 54" />
+  <!-- leaves -->
+  <path d="M38 26c-10-2-18-8-22-18 11-1 19 4 22 12" />
+  <path d="M40 40c10-3 17-10 20-20-11 0-18 6-20 14" />
+  <!-- berries -->
+  <circle cx="30" cy="70" r="7" />
+  <circle cx="46" cy="66" r="7" />
+  <circle cx="39" cy="82" r="7" />
+  <!-- calyx ticks -->
+  <path d="M30 66v-2M46 62v-2M39 78v-2" />
+</svg>

@@ -1,7 +1,7 @@
 ---
 /**
- * Social spotlight — reminds visitors that Instagram & Facebook are the best
- * source for live hours, picking conditions, closures, and announcements.
+ * Social spotlight — Instagram & Facebook as the best source for live hours,
+ * picking conditions, closures, and announcements. Calm, editorial treatment.
  */
 import { farm } from "../data/farm";
 import Icon from "./Icon.astro";
@@ -13,111 +13,72 @@ const { class: className = "" } = Astro.props;
 ---
 
 <section class={`spotlight section--berry ${className}`} aria-labelledby="spotlight-title">
-  <div class="container spotlight__inner">
-    <div class="spotlight__text">
-      <p class="eyebrow">The latest from the farm</p>
-      <h2 id="spotlight-title">Follow along for today's picking conditions</h2>
-      <p class="lead">
-        Our season is short and the weather has the final say. The fastest way
-        to know whether we're open, how the berries are coming in, and when we
-        close for the day is right here:
-      </p>
-      <ul class="spotlight__list">
-        <li><Icon name="check" size={18} /> Opening dates &amp; daily hours</li>
-        <li><Icon name="check" size={18} /> Current picking conditions</li>
-        <li><Icon name="check" size={18} /> Weather closures &amp; full-field days</li>
-        <li><Icon name="check" size={18} /> Farm news &amp; announcements</li>
-      </ul>
-    </div>
+  <div class="container container-narrow center">
+    <p class="eyebrow eyebrow--center">The latest from the farm</p>
+    <h2 id="spotlight-title">Follow along for today's picking conditions</h2>
+    <hr class="rule" />
+    <p class="lead">
+      Our season is short and the weather has the final say. The fastest way to
+      know whether we're open, how the berries are coming in, and when we close
+      for the day is on Instagram and Facebook — that's where we post first.
+    </p>
 
-    <div class="spotlight__cards">
+    <div class="spotlight__links">
       <a class="spotlight__card" href={farm.social.instagram.url} target="_blank" rel="noopener">
-        <span class="spotlight__icon"><Icon name="instagram" size={26} /></span>
+        <Icon name="instagram" size={24} />
         <span class="spotlight__handle">{farm.social.instagram.handle}</span>
-        <span class="spotlight__meta">Photos &amp; daily updates <Icon name="arrow-up-right" size={16} /></span>
+        <span class="spotlight__meta">Photos &amp; daily updates</span>
       </a>
       <a class="spotlight__card" href={farm.social.facebook.url} target="_blank" rel="noopener">
-        <span class="spotlight__icon"><Icon name="facebook" size={26} /></span>
+        <Icon name="facebook" size={24} />
         <span class="spotlight__handle">Blueberry Hill Farm</span>
-        <span class="spotlight__meta">Announcements &amp; hours <Icon name="arrow-up-right" size={16} /></span>
+        <span class="spotlight__meta">Announcements &amp; hours</span>
       </a>
     </div>
   </div>
 </section>
 
 <style>
-  .spotlight__inner {
+  .spotlight__links {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: center;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    text-align: left;
   }
-  @media (max-width: 52rem) {
-    .spotlight__inner {
+  @media (max-width: 34rem) {
+    .spotlight__links {
       grid-template-columns: 1fr;
-      gap: 2rem;
     }
-  }
-  .spotlight__list {
-    list-style: none;
-    margin: 1.5rem 0 0;
-    padding: 0;
-    display: grid;
-    gap: 0.6rem;
-  }
-  .spotlight__list li {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0;
-    color: #dcd8ee;
-  }
-  .spotlight__list :global(svg) {
-    color: var(--c-bloom);
-    flex-shrink: 0;
-  }
-  .spotlight__cards {
-    display: grid;
-    gap: 1rem;
   }
   .spotlight__card {
     display: grid;
-    gap: 0.35rem;
-    padding: 1.4rem 1.5rem;
-    border-radius: var(--radius);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    gap: 0.3rem;
+    padding: 1.5rem 1.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
     text-decoration: none;
     color: #fff;
-    transition: background-color 0.2s ease, transform 0.2s ease,
-      border-color 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
   .spotlight__card:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: var(--c-bloom);
-    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.5);
     text-decoration: none;
     color: #fff;
   }
-  .spotlight__icon {
-    display: grid;
-    place-items: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
+  .spotlight__card :global(svg) {
+    color: #b7b3cf;
+    margin-bottom: 0.5rem;
   }
   .spotlight__handle {
     font-family: var(--font-display);
-    font-size: 1.35rem;
-    font-weight: 600;
+    font-size: 1.3rem;
+    color: #fff;
   }
   .spotlight__meta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.9rem;
-    color: var(--c-bloom);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9c98c0;
   }
 </style>

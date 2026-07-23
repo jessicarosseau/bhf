@@ -109,11 +109,11 @@ import { href } from "../lib/url";
 <style>
   .jumpnav {
     position: sticky;
-    top: 4.5rem;
+    top: var(--header-h);
     z-index: 50;
-    background: color-mix(in srgb, var(--c-cream) 92%, transparent);
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
     backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--c-line);
+    border-bottom: 1px solid var(--line);
   }
   .jumpnav__inner {
     display: flex;
@@ -128,26 +128,26 @@ import { href } from "../lib/url";
   .jumpnav a {
     flex-shrink: 0;
     padding: 0.4rem 0.85rem;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius);
     font-size: 0.88rem;
     font-weight: 600;
-    color: var(--c-ink-soft);
+    color: var(--ink-2);
     text-decoration: none;
     white-space: nowrap;
   }
   .jumpnav a:hover {
-    background: var(--c-leaf-soft);
-    color: var(--c-leaf-dark);
+    background: var(--pine-soft);
+    color: var(--pine);
   }
 
   .disclaimer {
-    background: var(--c-leaf-soft);
-    color: var(--c-leaf-dark);
+    background: var(--pine-soft);
+    color: var(--pine);
     display: flex;
     gap: 0.6rem;
     align-items: flex-start;
     padding: 0.9rem 1.1rem;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
     margin-bottom: 2.5rem;
   }
   .disclaimer :global(svg) {
@@ -157,7 +157,7 @@ import { href } from "../lib/url";
 
   .around-section {
     margin-bottom: clamp(2.5rem, 5vw, 3.75rem);
-    scroll-margin-top: 8rem;
+    scroll-margin-top: calc(var(--header-h) + 3rem);
   }
   .around-section__head {
     display: flex;
@@ -172,14 +172,14 @@ import { href } from "../lib/url";
     height: 3rem;
     flex-shrink: 0;
     border-radius: 50%;
-    background: var(--c-leaf-soft);
-    color: var(--c-leaf-dark);
+    background: var(--pine-soft);
+    color: var(--pine);
   }
   .around-section__head h2 {
     margin: 0 0 0.15rem;
   }
   .around-section__head p {
-    color: var(--c-ink-soft);
+    color: var(--ink-2);
     margin: 0;
   }
 
@@ -209,11 +209,11 @@ import { href } from "../lib/url";
     gap: 0.25rem;
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--c-leaf-dark);
+    color: var(--pine);
     white-space: nowrap;
   }
   .place p {
-    color: var(--c-ink-soft);
+    color: var(--ink-2);
     font-size: 0.95rem;
   }
   .place__note {
@@ -223,10 +223,10 @@ import { href } from "../lib/url";
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--c-soon);
-    background: var(--c-sun-soft);
+    color: var(--soon);
+    background: var(--paper-3);
     padding: 0.2rem 0.55rem;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius);
   }
   .place__link {
     display: inline-flex;
@@ -235,7 +235,7 @@ import { href } from "../lib/url";
     margin-top: 0.9rem;
     font-weight: 700;
     font-size: 0.9rem;
-    color: var(--c-berry-dark);
+    color: var(--indigo-deep);
     text-decoration: none;
   }
   .place__link:hover {
@@ -255,11 +255,11 @@ import { href } from "../lib/url";
     gap: 0.55rem;
   }
   .itinerary li {
-    color: var(--c-ink-soft);
+    color: var(--ink-2);
     padding-left: 0.3rem;
   }
   .itinerary li::marker {
-    color: var(--c-leaf);
+    color: var(--pine);
     font-weight: 700;
   }
 </style>

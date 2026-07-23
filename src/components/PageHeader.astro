@@ -1,19 +1,23 @@
 ---
 /**
- * Consistent page header (title banner) for interior pages.
+ * Consistent editorial page header for interior pages.
+ * Cream background with a botanical mark, centered title, and short rule.
  */
+import BotanicalSprig from "./BotanicalSprig.astro";
+
 interface Props {
   eyebrow?: string;
   title: string;
   intro?: string;
-  tone?: "berry" | "leaf";
+  sprig?: boolean;
 }
-const { eyebrow, title, intro, tone = "berry" } = Astro.props;
+const { eyebrow, title, intro, sprig = true } = Astro.props;
 ---
 
-<section class={`page-header page-header--${tone}`}>
-  <div class="container container-narrow page-header__inner">
-    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+<section class="page-header">
+  <div class="container container-narrow center">
+    {sprig && <BotanicalSprig size={44} class="page-header__sprig" />}
+    {eyebrow && <p class="eyebrow eyebrow--center">{eyebrow}</p>}
     <h1>{title}</h1>
     {intro && <p class="lead page-header__intro">{intro}</p>}
     <slot />
@@ -22,54 +26,23 @@ const { eyebrow, title, intro, tone = "berry" } = Astro.props;
 
 <style>
   .page-header {
-    position: relative;
-    padding-block: clamp(2.75rem, 6vw, 4.5rem);
-    text-align: center;
-    overflow: hidden;
+    padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 4rem));
+    padding-bottom: clamp(2.5rem, 5vw, 3.75rem);
+    background: var(--paper);
   }
-  .page-header--berry {
-    background: linear-gradient(160deg, #26254f, #4b4e9e);
-    color: #fff;
-  }
-  .page-header--leaf {
-    background: linear-gradient(160deg, #2c4a34, #4b7a54);
-    color: #fff;
-  }
-  .page-header::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(
-      circle at 82% 0%,
-      rgba(251, 237, 210, 0.22),
-      transparent 45%
-    );
-    pointer-events: none;
-  }
-  .page-header__inner {
-    position: relative;
+  .page-header__sprig {
+    color: var(--line-2);
+    margin: 0 auto 1.25rem;
   }
   .page-header h1 {
-    color: #fff;
-    margin-bottom: 0.5rem;
-  }
-  .eyebrow {
-    justify-content: center;
-    color: var(--c-bloom);
-  }
-  .page-header--leaf .eyebrow {
-    color: #cfe6c9;
-  }
-  .eyebrow::before {
-    background: var(--c-bloom);
-    box-shadow: 0 0 0 3px rgba(169, 182, 217, 0.25);
+    margin-bottom: 0;
   }
   .page-header__intro {
-    color: #e4e1f2;
     max-width: 52ch;
-    margin-inline: auto;
+    margin: 1.25rem auto 0;
   }
-  .page-header--leaf .page-header__intro {
-    color: #e7f1e4;
+  .page-header :global(.flow-cta) {
+    margin-top: 1.75rem;
+    justify-content: center;
   }
 </style>

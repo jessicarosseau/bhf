@@ -266,11 +266,11 @@ const faqs = [
   /* Jump nav */
   .jumpnav {
     position: sticky;
-    top: 4.5rem;
+    top: var(--header-h);
     z-index: 50;
-    background: color-mix(in srgb, var(--c-cream) 92%, transparent);
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
     backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--c-line);
+    border-bottom: 1px solid var(--line);
   }
   .jumpnav__inner {
     display: flex;
@@ -285,16 +285,16 @@ const faqs = [
   .jumpnav a {
     flex-shrink: 0;
     padding: 0.4rem 0.85rem;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius);
     font-size: 0.88rem;
     font-weight: 600;
-    color: var(--c-ink-soft);
+    color: var(--ink-2);
     text-decoration: none;
     white-space: nowrap;
   }
   .jumpnav a:hover {
-    background: var(--c-berry-soft);
-    color: var(--c-berry-dark);
+    background: var(--indigo-soft);
+    color: var(--indigo-deep);
   }
 
   .info-layout {
@@ -304,7 +304,7 @@ const faqs = [
     align-items: start;
   }
   .info-block {
-    scroll-margin-top: 8rem;
+    scroll-margin-top: calc(var(--header-h) + 3rem);
   }
   .info-block--full {
     grid-column: 1 / -1;
@@ -322,18 +322,18 @@ const faqs = [
     font-size: 1.5rem;
   }
   .info-block h2 :global(svg) {
-    color: var(--c-berry);
+    color: var(--indigo);
     flex-shrink: 0;
   }
   .info-address {
     font-style: normal;
     font-weight: 600;
     font-size: 1.1rem;
-    color: var(--c-berry-deep);
+    color: var(--indigo-deep);
     margin-bottom: 0.5rem;
   }
   .muted-note {
-    color: var(--c-muted);
+    color: var(--ink-3);
     font-size: 0.92rem;
   }
 
@@ -342,15 +342,15 @@ const faqs = [
     margin-top: 1.1rem;
   }
   .info-map {
-    background: var(--c-berry-soft);
+    background: var(--indigo-soft);
   }
   .info-map iframe {
     width: 100%;
     height: 15rem;
     border: 0;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
     display: block;
-    background: var(--c-berry-soft);
+    background: var(--indigo-soft);
   }
 
   .info-list {
@@ -367,7 +367,7 @@ const faqs = [
     margin: 0;
   }
   .info-list :global(svg) {
-    color: var(--c-berry);
+    color: var(--indigo);
     margin-top: 0.15rem;
     flex-shrink: 0;
   }
@@ -377,7 +377,7 @@ const faqs = [
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--c-muted);
+    color: var(--ink-3);
   }
 
   .hours-table {
@@ -389,19 +389,19 @@ const faqs = [
   .hours-table td {
     text-align: left;
     padding: 0.6rem 0.5rem;
-    border-bottom: 1px solid var(--c-line);
+    border-bottom: 1px solid var(--line);
   }
   .hours-table th {
     font-weight: 600;
-    color: var(--c-ink);
+    color: var(--ink);
   }
   .hours-table td {
     text-align: right;
     font-weight: 600;
-    color: var(--c-berry-dark);
+    color: var(--indigo-deep);
   }
   .hours-table .is-closed td {
-    color: var(--c-muted);
+    color: var(--ink-3);
     font-weight: 500;
   }
 
@@ -410,7 +410,7 @@ const faqs = [
     gap: 0.6rem;
     align-items: flex-start;
     padding: 0.85rem 1rem;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
     font-size: 0.92rem;
     margin: 1rem 0 0;
   }
@@ -419,11 +419,11 @@ const faqs = [
     margin-top: 0.1rem;
   }
   .callout--warn {
-    background: var(--c-sun-soft);
+    background: var(--paper-3);
     color: #6b4a12;
   }
   .callout--warn :global(svg) {
-    color: var(--c-soon);
+    color: var(--soon);
   }
 
   .checklist {
@@ -440,7 +440,7 @@ const faqs = [
     margin: 0;
   }
   .checklist :global(svg) {
-    color: var(--c-leaf);
+    color: var(--pine);
     margin-top: 0.2rem;
     flex-shrink: 0;
   }
@@ -477,7 +477,7 @@ const faqs = [
     height: 2.1rem;
     flex-shrink: 0;
     border-radius: 50%;
-    background: var(--c-berry);
+    background: var(--indigo);
     color: #fff;
     font-family: var(--font-display);
     font-weight: 600;
@@ -496,8 +496,8 @@ const faqs = [
     width: 2.6rem;
     height: 2.6rem;
     border-radius: 50%;
-    background: var(--c-leaf-soft);
-    color: var(--c-leaf-dark);
+    background: var(--pine-soft);
+    color: var(--pine);
     margin-bottom: 0.75rem;
   }
   .policy h3 {
@@ -506,7 +506,7 @@ const faqs = [
   }
   .policy p {
     font-size: 0.92rem;
-    color: var(--c-ink-soft);
+    color: var(--ink-2);
   }
   .policy__flag {
     display: inline-block;
@@ -515,10 +515,10 @@ const faqs = [
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--c-soon);
-    background: var(--c-sun-soft);
+    color: var(--soon);
+    background: var(--paper-3);
     padding: 0.2rem 0.55rem;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius);
   }
 
   .faqs {
@@ -526,15 +526,15 @@ const faqs = [
     gap: 0.6rem;
   }
   .faq {
-    background: var(--c-paper);
-    border: 1px solid var(--c-line);
-    border-radius: var(--radius-sm);
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
     overflow: hidden;
   }
   .faq summary {
     padding: 1rem 1.15rem;
     font-weight: 600;
-    color: var(--c-berry-deep);
+    color: var(--indigo-deep);
     cursor: pointer;
     list-style: none;
     display: flex;
@@ -548,7 +548,7 @@ const faqs = [
   .faq summary::after {
     content: "+";
     font-size: 1.4rem;
-    color: var(--c-berry);
+    color: var(--indigo);
     transition: transform 0.2s ease;
     line-height: 1;
   }
@@ -557,7 +557,7 @@ const faqs = [
   }
   .faq__a {
     padding: 0 1.15rem 1.15rem;
-    color: var(--c-ink-soft);
+    color: var(--ink-2);
   }
 
   .check-updates h2 {
